@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="" rel="stylesheet" type="text/css">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .box{
+            overflow: hidden;
+            width: 600px;
+            height: 550px;
+            border: 1px solid blue;
+            margin: 0 auto;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .box div{
+            margin-left: 70px;
+        }
+        .a{
+            margin-top: 50px;
+        }
+        input{
+            margin-left: 10px;
+            width: 400px;
+            height: 30px;
+            margin-top: 30px;
+        }
+        .btn{
+            width: 300px;
+            height: 30px;
+            margin: 25px auto;
+        }
+        button{
+            width: 60px;
+            height: 30px;
+            float: right;
+        }
+        h1{
+            margin-left: 120px;
+        }
+        
+    </style>
+</head>
+<body>
+<div class="box">
+<h1>新闻录取管理后台</h1>
+    <div class="a">标题:<input type="text" id="user" placeholder="新闻标题"><br></div>
+    <div>name:<input type="text" id="textname" placeholder="作者"><br></div>
+    <div>text:<input type="text" id="text" placeholder="新闻内容"><br></div>
+    <div class="btn"><button id="btn">录取</button></div>
+</div>
+
+<script>
+
+    btn.onclick = function(){
+        ajax({
+            url:'http://localhost:8000/user/lu',
+            type:'post',
+            data:{
+                user:user.value,
+                textname:textname.value,
+                text:text.value
+            },
+            success:function(da){
+                console.log(da)
+                window.location.href='http://localhost:8000/list.html'
+            },
+            error:function(){
+            }
+        })
+    }
+
+
+
+
+
+
+
+
+
+
+    function ajax(req){
+//	console.log(req.data)
+        if(window.XMLHttpRequest){
+            var ajax = new XMLHttpRequest()
+        }else{
+            var ajax = new ActiveXObject( "Microsoft.XMLHTTP" );
+        }
+        if(req.type == 'get'){
+            ajax.open('get',req.url+'?'+strdata(req.data),true)
+            ajax.send()
+        }else{
+            ajax.open('post',req.url,true)
+            ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+            ajax.send(strdata(req.data))
+        }
+        ajax.onreadystatechange = function(){
+            if(ajax.readyState == 4){
+                if(ajax.status>=200 && ajax.status<300 || ajax.status == 304){
+                    req.success(ajax.responseText)
+//					console.log(ajax.responseText)
+                }else{
+                    req.error(ajax.status)
+                }
+
+            }
+        }
+
+        function strdata(da){
+            var arr = []
+            for(var i in da){
+                arr.push(i+'='+da[i])
+            }
+            var strurl = arr.join('&')
+            return strurl
+        }
+    }
+</script>
+</body>
+</html>

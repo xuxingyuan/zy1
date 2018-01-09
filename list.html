@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="" rel="stylesheet" type="text/css">
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #box{
+            float: left;
+            margin-top: 15px;
+            
+            width: 255px;
+            height: 100%;
+            border-bottom: 1px solid red;
+            padding-left: 15px;
+            padding-right: 15px;
+            
+            padding-bottom: 10px;
+        }
+        #box2{
+            margin-top: 20px;
+             border-bottom: 1px solid red;
+        }
+        button{
+            margin-left: 60px;
+            margin-top: 10px;
+        }
+        /*#btn1{*/
+            /*margin-left: 200px;*/
+            /*margin-right: 10px;*/
+        /*}*/
+       /*#btn{*/
+            /*margin-left: 150px;*/
+            /*margin-top: 0px;*/
+        /*}*/
+        p{
+            margin-left: 5px;
+        }
+        h2{
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+        .c{
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="box">
+
+</div>
+
+
+<script>
+    ajax({
+        url:'http://localhost:8000/user/list',
+        type:'post',
+        success:function(da){
+            console.log(da);var json=eval(da);
+            var str='';
+            for(var i= 0;i<json.length;i++){
+                str+=`<div id='box2'><h2>标题：${json[i].name}</h2><p>作者：${json[i].textname}</p><div class='c'>内容：${json[i].text}</div><button id='btn' onclick='btn()'>删除</button><button id='btn1'>分享</button></div>`
+              
+//               function btn(){
+//                    var id=this.attr('da-id');
+//                    var _this=this;
+//                    ajax({
+//                        url:'http://localhost:8000/user/shan',
+//                        type:'post',
+//                        data:{'id':id},
+//                        success:function(da){
+//                            console.log(da)
+//                            window.location.href='http://localhost:8000/list.html'
+//                        },
+//                        error:function(){
+//                        }
+//                    })
+//                }
+            }
+            box.innerHTML=str;
+        },
+        error:function(){
+        }
+    })
+
+
+
+
+
+    function ajax(req){
+//	console.log(req.data)
+        if(window.XMLHttpRequest){
+            var ajax = new XMLHttpRequest()
+        }else{
+            var ajax = new ActiveXObject( "Microsoft.XMLHTTP" );
+        }
+        if(req.type == 'get'){
+            ajax.open('get',req.url+'?'+strdata(req.data),true)
+            ajax.send()
+        }else{
+            ajax.open('post',req.url,true)
+            ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+            ajax.send(strdata(req.data))
+        }
+        ajax.onreadystatechange = function(){
+            if(ajax.readyState == 4){
+                if(ajax.status>=200 && ajax.status<300 || ajax.status == 304){
+                    req.success(ajax.responseText)
+//					console.log(ajax.responseText)
+                }else{
+                    req.error(ajax.status)
+                }
+
+            }
+        }
+
+        function strdata(da){
+            var arr = []
+            for(var i in da){
+                arr.push(i+'='+da[i])
+            }
+            var strurl = arr.join('&')
+            return strurl
+        }
+    }
+</script>
+</body>
+</html>
